@@ -1,0 +1,30 @@
+services:
+  grpc-web:
+    build: .
+    volumes:
+      - ../proto:/proto
+      - ./js_scripts:/js_scripts
+    working_dir: /js_scripts
+    command: bash -c "protoc -I/proto messenger.proto 
+      --js_out=import_style=commonjs:./grpc-web-out
+      --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./grpc-web-out
+      && npm install
+      && npx webpack"
+
+  envoy:
+    image: envoyproxy/envoy:v1.22.0
+    ports:
+      - ${EXTERNAL_GRPC_PORT}:${EXTERNAL_GRPC_PORT}
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html
+      - ./js_scripts/dist/main.js:/usr/share/nginx/html/js_scripts/dist/main.js
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - grpc-web
+      - envoy
