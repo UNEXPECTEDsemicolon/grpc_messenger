@@ -4,6 +4,7 @@ services:
     volumes:
       - ../proto:/proto
       - ./js_scripts:/js_scripts
+      - ./js_scripts/grpc-web-out:/js_scripts/grpc-web-out
     working_dir: /js_scripts
     command: bash -c "protoc -I/proto messenger.proto 
       --js_out=import_style=commonjs:./grpc-web-out
@@ -22,7 +23,7 @@ services:
     image: nginx:alpine
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html
-      - ./js_scripts/dist/main.js:/usr/share/nginx/html/js_scripts/dist/main.js
+      - ./js_scripts/dist:/usr/share/nginx/html/js_scripts/dist
     ports:
       - "${FRONTEND_PORT}:80"
     depends_on:

@@ -26,6 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         return Ok(());
     }
+    println!("Got it");
     let mut inbound = client
         .receive_messages(MessengerRequest {
             nickname: nickname.clone(),

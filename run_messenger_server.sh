@@ -1,3 +1,3 @@
 #!/bin/env bash
 
-docker-compose run messenger-server
+docker-compose up messenger-server redis
