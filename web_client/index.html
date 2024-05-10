@@ -23,7 +23,13 @@
         }
 
         #message-input {
-            width: 85%;
+            width: 75%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        #delete-delay-input {
+            width: 10%;
             padding: 5px;
             box-sizing: border-box;
         }
@@ -39,6 +45,7 @@
     <div id="message-input-container">
         <input type="text" id="addressee-input" placeholder="Enter addressee" disabled>
         <input type="text" id="message-input" placeholder="Type your message" disabled>
+        <input type="text" id="delete-delay-input" placeholder="Delete message after, secs" disabled>
     </div>
     <button id="send-btn" disabled>Send</button>
 </body>

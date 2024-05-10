@@ -53,6 +53,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     sender: nickname.clone(),
                     recipient: recipient.to_string(),
                     content: content.to_string(),
+                    delete_timestamp: 0,
                 })
                 .await?;
         } else {

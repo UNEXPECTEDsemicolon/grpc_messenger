@@ -15,6 +15,7 @@ message Message {
   string sender = 1;
   string recipient = 2;
   string content = 3;
+  int64 deleteTimestamp = 4;
 }
 
 message MessageResponse {

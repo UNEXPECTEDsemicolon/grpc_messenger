@@ -5,13 +5,9 @@ services:
     volumes:
       - .:/usr/src/app
     entrypoint: cargo run --release --bin messenger-server
-    # entrypoint: ./target/release/messenger-server
     ports:
       - ${INTERNAL_GRPC_PORT}:${INTERNAL_GRPC_PORT}
     network_mode: host
-    # depends_on:
-    #   redis:
-    #     condition: service_healthy
 
   messenger-client:
     build: .
@@ -19,7 +15,6 @@ services:
     volumes:
       - .:/usr/src/app
     entrypoint: cargo run --release --bin messenger-client
-    # entrypoint: ./target/release/messenger-client
     network_mode: host
     environment:
       - INTERNAL_GRPC_HOST=host.docker.internal
@@ -29,8 +24,3 @@ services:
     network_mode: host
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      # interval: 1s
-      # timeout: 3s
-      # retries: 30

@@ -3,7 +3,7 @@
 ## Components:
 
 ### 1. Backend messenger server
-Implemented in Rust using [tonic](https://github.com/hyperium/tonic) gRPC framework
+Implemented in Rust using [tonic](https://github.com/hyperium/tonic) gRPC framework. Storage: [Redis](https://redis.io/)
 
 **How to run**: `./run_messenger_server.sh`
 
@@ -26,4 +26,4 @@ HTML + JavaScript + [gRPC Web](https://github.com/grpc/grpc-web) (packed by [web
 
 All the components are built using only docker-compose. No extra requirement is needed. Feel free to edit ports in `.env` file.
 
-## Video: [watch](./Video.mp4)
+## Video: [watch](./Video.mkv)
