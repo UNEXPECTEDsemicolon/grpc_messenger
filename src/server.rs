@@ -5,7 +5,7 @@ use redis::aio::MultiplexedConnection;
 use redis::{AsyncCommands, Client};
 use std::collections::{hash_map::Entry, HashMap};
 use std::sync::Arc;
-use std::{env, isize};
+use std::env;
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{transport::Server, Request, Response, Status};
@@ -41,18 +41,22 @@ impl MessengerService {
         self.store_message_for(message, &message.sender).await?;
         Ok(())
     }
-    
+
     async fn store_message_for(&self, message: &Message, user: &str) -> redis::RedisResult<()> {
         let key = format!("user:{}:messages", user);
-        let _: isize = match self.redis_conn.try_write() {
-            Ok(mut conn) => conn.rpush(key, &message.encode_to_vec()).await?,
+        match self.redis_conn.try_write() {
+            Ok(mut conn) => {
+                conn.rpush(&key, &message.encode_to_vec()).await?;
+                if message.delete_timestamp != 0 {
+                    conn.expire_at(&key, message.delete_timestamp).await?;
+                }
+            }
             Err(_) => {
-                self.redis_conn
-                    .read()
-                    .await
-                    .clone()
-                    .rpush(key, &message.encode_to_vec())
-                    .await?
+                let mut conn = self.redis_conn.read().await.clone();
+                conn.rpush(&key, &message.encode_to_vec()).await?;
+                if message.delete_timestamp != 0 {
+                    conn.expire_at(&key, message.delete_timestamp).await?;
+                }
             }
         };
         Ok(())
